@@ -37,19 +37,19 @@ describe Bluff do
       # end
       
       describe 'DSL' do
-        describe '.insist' do
-          it 'raises an error if the insisted attribute is missing' do
-            Bluff.for(:foo) {|attributes| insist(:bar) }
+        describe '.requires' do
+          it 'raises an error if the required attribute is missing' do
+            Bluff.for(:foo) {|attributes| requires(:bar) }
             lambda{ Bluff.foo }.should raise_error(ArgumentError, /bar cannot be bluffed for foo/)
           end
         
           it 'does nothing if the attribute is present' do
-            Bluff.for(:foo) {|attributes| insist(:bar) }
+            Bluff.for(:foo) {|attributes| requires(:bar) }
             lambda{ Bluff.foo({:bar => :red}) }.should_not raise_error
           end
         
           it 'checks for the foreign key if the association is missing' do
-            Bluff.for(:foo) {|attributes| insist(:bar) }
+            Bluff.for(:foo) {|attributes| requires(:bar) }
             lambda{ Bluff.foo({:bar_id => :red}) }.should_not raise_error
           end
         end

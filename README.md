@@ -54,36 +54,40 @@ Bluff.for(:company_name) { Faker::Company.name }
 
 #### HELPERS
 
-There is a very tiny DSL built into Bluff to help you out.  Two methods are available:
-`insist()` and `default()`.
+There is a very tiny DSL built into Bluff to help you out.  Three methods are available:
+`requires()`, `default()`, and `defaults()`.
 
-**insist([:attribute, :attribute, ...])** takes a list of required attributes. If any of those attributes were not
+**requires(:attribute, :attribute, ...)** takes a list of required attributes. If any of those attributes were not
 provided an ArgumentError will be thrown.
 
 **default(:attribute, :value)** takes an attribute and a default value. If the attribute was not previously defined
-it will be assigned the given value.
+it will be assigned the given value.  If you have multiple defaults to set, use the hash version instead **defaults({:attribute => :value, :attribute => value, ...})**
 
 Here's an example of how you might put these two little guys to work:
 
 ```
 Bluff.for(:workspace) do |attributes|
-  insist(:account)
+  requires(:account)
   
-  default(:name, Bluff.name)
+  defaults({
+    :name => Bluff.name
+  })
 
   User.new(attributes).tap do |user|
-    # sometimes it's easier to define the values here instead
-    user.email = Bluff.email({:name => user.name})
+    # sometimes it's easier to define the default values down here instead
+    user.email ||= Bluff.email({:name => user.name})
   end
 end
 ```
+
+Feel free to use them or huck em to the curb and just work directly with the attributes hash.
 
 #### CALLING YOUR BLUFFS
 
 ```
 User.bluff  # returns an unsaved instance -- could also use Bluff.user
 User.bluff! # returns a saved instance -- could also use Bluff.user!
-User.bluff({:name => 'Ryan'}) # supply overrides in the attributes hash
+User.bluff({:name => 'Ryan'}) # supply overrides/defaults in the attributes hash
 ```
 
 ### METHOD BLUFFS (MOCKS / STUBS)

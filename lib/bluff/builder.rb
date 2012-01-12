@@ -1,4 +1,6 @@
 require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/array/wrap'
+require 'active_support/core_ext/array/conversions'
 require 'active_support/core_ext/hash/indifferent_access'
 
 require 'bluff/support/backend'
@@ -34,12 +36,22 @@ module Bluff
         self.instance_exec(@attributes, &block)
       end
       
-      def insist(attribute)
-        raise ArgumentError, "#{attribute} cannot be bluffed for #{@target}" unless provided?(attribute)
+      def requires(attributes)
+        missing = []
+        
+        Array.wrap(attributes).each do |attribute|
+          missing << attribute unless provided?(attribute)
+        end
+        
+        raise ArgumentError, "#{missing.to_sentence} cannot be bluffed for #{@target}" unless missing.empty?
       end
       
       def default(attribute, value)
         @attributes[attribute] = value if @attributes[attribute].blank?
+      end
+      
+      def defaults(hash)
+        hash.each {|key, value| default(key, value)}
       end
       
       private
@@ -50,10 +62,6 @@ module Bluff
     end
     
     module ClassMethods
-        # def insist(field)
-      #   raise ArgumentError, "#{field} cannot be bluffed for #{target}"
-      # end
-      
       # bluffs for all!
       # Object.define_singleton_method :bluff do puts 'bluff on class'; end # defines class method
       # Object.send :define_method, :bluff do puts 'bluff on instance'; end # defines instance method
