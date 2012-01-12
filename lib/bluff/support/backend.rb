@@ -7,11 +7,11 @@ module Bluff::Support
         @@handlers << handler
       end
       
-      def save!(record)
+      def save!(record, name)
         handlers = @@handlers.select {|handler| handler.accepts?(record)}
         
         if handlers.empty?
-          raise 'Record cannot be saved'
+          raise "#{name} cannot be bang bluffed (#{record})"
         else
           handlers.first.save!(record)
         end

@@ -9,15 +9,31 @@ describe Bluff do
         Bluff.foo.should eq('bar')
       end
     end
-    
-    context 'with an existing class' do
-      class BluffedClass
+  end
+  
+  describe '.bluff' do
+    it 'returns an unsaved instance of the bluff' do
+      Bluff.for(:bluffable_class) { BluffableClass.new }
+      Bluff.bluffable_class.new_record?.should be_true
+    end
+  end
+  
+  describe '.bluff!' do
+    context 'when the bluffed object is not saveable' do
+      it 'throws an error when called' do
+        class TransientClass
+        end
+        
+        Bluff.for(:transient_class) { TransientClass.new }
+        lambda{ Bluff.transient_class! }.should raise_error(RuntimeError, /cannot be bang bluffed/)
       end
-      
-      Bluff.for(:bluffed_class) { true }
-      
-      specify { BluffedClass.should be_bluffable }
-      specify { BluffedClass.should be_bluffable! }
+    end
+    
+    context 'when the bluffed object is saveable' do
+      it 'returns the bluffed object' do
+        Bluff.for(:bluffable_class) { BluffableClass.new }
+        Bluff.bluffable_class!.new_record?.should be_false
+      end
     end
   end
   

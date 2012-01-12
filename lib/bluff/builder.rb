@@ -38,7 +38,7 @@ module Bluff
       def define_bluff_bang(field)
         define_singleton_method "#{field}!" do |*args|
           send(field, *args).tap do |record|
-            Bluff::Support::Backend.save!(record)
+            Bluff::Support::Backend.save!(record, field)
           end
         end
       end
