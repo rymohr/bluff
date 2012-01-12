@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Bluff::VERSION
   s.authors     = ["Ryan Mohr"]
   s.email       = ["ryan.mohr@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{A single source of lies for all your testing needs}
-  s.description = %q{}
+  s.homepage    = "https://github.com/islandr/bluff"
+  s.summary     = %q{A single source of lies for all your testing needs.}
+  s.description = %q{Bluff is a builder-esque interface for faking data and mocking models.}
 
   s.rubyforge_project = "bluff"
 
