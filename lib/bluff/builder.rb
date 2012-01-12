@@ -1,19 +1,37 @@
+require 'active_support/core_ext/hash/indifferent_access'
+
 require 'bluff/support/backend'
 require 'bluff/support/backend/active_record'
 
 module Bluff
   module Builder
     class Definition
-      def initialize(*arguments)
+      def initialize(target, *arguments)
+        @target = target
         @arguments = *arguments
+        
+        # how can we look up the block's default arguments in execute?
+        @attributes = @arguments.first || {}
+        
+        @attributes = @attributes.with_indifferent_access if @attributes.is_a?(Hash)
       end
       
       def execute(&block)
         self.instance_exec(*@arguments, &block)
       end
       
-      def insist
-        puts "instance insist"
+      def insist(attribute)
+        raise ArgumentError, "#{attribute} cannot be bluffed for #{@target}" unless provided?(attribute)
+      end
+      
+      def default(attribute, value)
+        @attributes[attribute] = value
+      end
+      
+      private
+      # returns true if attributes contains attribute or attribute_id
+      def provided?(attribute)
+        @attributes.is_a?(Hash) && (@attributes.has_key?(attribute) || @attributes.has_key?("#{attribute}_id"))
       end
     end
     
@@ -46,7 +64,7 @@ module Bluff
           bluffed_object = nil
       
           config.max_attempts.times do
-            bluffed_object = Definition.new(*arguments).execute(&block) #DSL.instance_exec(*args, &block)
+            bluffed_object = Definition.new(field, *arguments).execute(&block) #DSL.instance_exec(*args, &block)
             break if !bluffed_object.respond_to?(:valid?) || bluffed_object.valid?
           end
       

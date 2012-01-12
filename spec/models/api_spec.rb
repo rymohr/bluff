@@ -36,9 +36,45 @@ describe Bluff do
       #   end
       # end
       
-      it 'has dsl methods available for use' do
-        Bluff.for(:foo) { insist }
-        Bluff.foo
+      describe 'DSL' do
+        describe '.insist' do
+          it 'raises an error if the insisted attribute is missing' do
+            Bluff.for(:foo) {|attributes| insist(:bar) }
+            lambda{ Bluff.foo }.should raise_error(ArgumentError, /bar cannot be bluffed for foo/)
+          end
+        
+          it 'does nothing if the attribute is present' do
+            Bluff.for(:foo) {|attributes| insist(:bar) }
+            lambda{ Bluff.foo({:bar => :red}) }.should_not raise_error
+          end
+        
+          it 'checks for the foreign key if the association is missing' do
+            Bluff.for(:foo) {|attributes| insist(:bar) }
+            lambda{ Bluff.foo({:bar_id => :red}) }.should_not raise_error
+          end
+        end
+
+        # attributes.requires(:).defaults(:)
+        
+        # default is not ready yet
+        # describe '.default' do
+        #   it 'assigns the given value to the attributes hash if blank' do
+        #     Bluff.for(:foo) {|attributes={}|
+        #       attributes.must_provide(:bar)
+        #       
+        #       attributes.with_defaults({
+        #         :bar => :red
+        #       })
+        #       
+        #       attributes.default(:bar, :red)
+        #       attributes[:bar]
+        #     }
+        #     
+        #     Bluff.foo.should eq(:red)
+        #     Bluff.foo({:bar => ''}).should eq(:red)
+        #     Bluff.foo({:bar => :blue}).should eq(:blue)
+        #   end
+        # end
       end
     end
   end
