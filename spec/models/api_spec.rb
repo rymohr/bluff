@@ -9,6 +9,16 @@ describe Bluff do
         Bluff.foo.should eq('bar')
       end
     end
+    
+    context 'with an existing class' do
+      class BluffedClass
+      end
+      
+      Bluff.for(:bluffed_class) { true }
+      
+      specify { BluffedClass.should be_bluffable }
+      specify { BluffedClass.should be_bluffable! }
+    end
   end
   
   describe 'data' do    

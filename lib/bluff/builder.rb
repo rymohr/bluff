@@ -1,3 +1,5 @@
+require 'bluff/support/backend'
+
 module Bluff
   module Builder
     module ClassMethods
@@ -36,21 +38,14 @@ module Bluff
       def define_bluff_bang(field)
         define_singleton_method "#{field}!" do |*args|
           send(field, *args).tap do |record|
-            ActiveRecord::Base.transaction do
-              record.class.reflect_on_all_associations(:belongs_to).each do |reflection|
-                association = record.send(reflection.name)
-                association.save! if association && association.new_record?
-              end
-          
-              record.save!
-            end
+            Bluff::Support::Backend.save!(record)
           end
         end
       end
-  
-      def extend_target(field, options)
-        class_name = options[:class_name] || field.to_s.classify
       
+      def extend_target(field, options)
+        class_name = options[:class_name] || field.to_s.camelize
+        
         if Kernel.const_defined?(class_name)
           klass = Kernel.const_get(class_name)
         
