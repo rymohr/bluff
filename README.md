@@ -1,20 +1,20 @@
-= bluff
+# bluff
 
 * https://github.com/islandr/bluff
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 A single source of lies for all your testing needs.
 
-== FEATURES/PROBLEMS:
+## FEATURES/PROBLEMS:
 
 * TODO
 
-== CONTRIBUTING:
+## CONTRIBUTING:
 
 Pull requests are welcome!  See the DEVELOPERS section at the bottom of this page for more information.
 
-== SYNOPSIS:
+## SYNOPSIS:
 
 My original intentions for bluff are focused on rails/activerecord but I'm open
 to other libraries if it doesn't pollute the API.
@@ -24,14 +24,14 @@ and to do so via an API that feels natural to rails/activerecord users.  I favor
 a slightly more wordy API for defining bluffs that offers the full power and flexibility
 of Ruby over a cute DSL that limits customization.
 
-=== MODEL AND DATA BLUFFS
+### MODEL AND DATA BLUFFS
 
-Bluff comes with a small set of predefined data bluffs (see lib/bluff/bluffs/data_bluffs.rb) 
+Bluff comes with a small set of predefined data bluffs (see `lib/bluff/bluffs/data_bluffs.rb`) 
 but its easy to add your own.
 
 The standard practice is to define your bluffs within spec/bluffs.  If you are
-bluffing a model, name the file *_model_\_bluff.rb*.  If you need to bluff custom
-data, do so in *data_bluffs.rb*.
+bluffing a model, name the file **\_model\_\_bluff.rb**.  If you need to bluff custom
+data, do so in **data_bluffs.rb**.
 
 A bluff is a bluff, whether it's just a piece of data or a full blown model.  All bluffs
 share the same namespace (the root namespace is the *only* namespace) so choose your bluff 
@@ -52,14 +52,14 @@ Bluff.for(:name) { Faker::Name.name } # Call via Bluff.name
 Bluff.for(:company_name) { Faker::Company.name }
 ```
 
-==== CALLING YOUR BLUFFS
+#### CALLING YOUR BLUFFS
 ```
 User.bluff  # returns an unsaved instance -- could also use Bluff.user
 User.bluff! # returns a saved instance -- could also use Bluff.user!
-User.bluff({:name => 'Ryan'}) # supply overrides in the attributes hash
+User.bluff({:name #> 'Ryan'}) # supply overrides in the attributes hash
 ```
 
-=== METHOD BLUFFS (MOCKS / STUBS)
+### METHOD BLUFFS (MOCKS / STUBS)
 
 All objects and classes are given a `bluff()` method, which is
 used for bluffing both models and methods.  If given a symbol, the 
@@ -76,12 +76,12 @@ user.bluff(:name).as(:value)
 The mocking abilities of bluff are no more than a thin wrapper around
 rspec-mocks.  Calling `Bluff.mock('account')` is identical to calling `double('account')`
 
-== REQUIREMENTS:
+## REQUIREMENTS:
 
 * rspec-mocks
 * faker
 
-== INSTALL:
+## INSTALL:
 
 * `gem install bluff`
 * or simply add bluff to your Gemfile and run `bundle install`
@@ -92,7 +92,7 @@ group :test do
 end
 ```
 
-== FURTHER READING:
+## FURTHER READING:
 
 http://faker.rubyforge.org/
 
@@ -100,7 +100,7 @@ https://www.relishapp.com/rspec/rspec-mocks/
 https://www.relishapp.com/rspec/rspec-mocks/docs/method-stubs/stub-on-any-instance-of-a-class
 https://www.relishapp.com/rspec/rspec-mocks/docs/outside-rspec/configure-any-test-framework-to-use-rspec-mocks
 
-== DEVELOPERS:
+## DEVELOPERS:
 
 After checking out the source, run:
 
@@ -108,7 +108,7 @@ After checking out the source, run:
 
 This task will install any missing dependencies and run the tests/specs.
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 
