@@ -7,7 +7,6 @@ module Bluff::Support::ActiveRecord
   class Backend
     class << self
       def accepts?(record)
-        puts "checking #{record} as #{record.class}, if #{ActiveRecord::Base}"
         record.is_a?(ActiveRecord::Base)
       end
 

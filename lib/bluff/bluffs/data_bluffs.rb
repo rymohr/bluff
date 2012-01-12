@@ -12,5 +12,5 @@ Bluff.for(:company_name) { Faker::Company.name }
 Bluff.for(:domain) { Faker::Internet.domain_name }
 
 # words
-Bluff.for(:words) {|count = 3| Faker::Lorem.words(count) }
+Bluff.for(:words) {|count = 3| puts "bluffing words with count=#{count}"; Faker::Lorem.words(count) }
 Bluff.for(:phrase) { Faker::Company.bs }

@@ -9,6 +9,38 @@ describe Bluff do
         Bluff.foo.should eq('bar')
       end
     end
+    
+    context 'when given additional arguments' do
+      it 'passes the arguments for use in the bluff' do
+        Bluff.for(:foo) {|attributes| attributes[:value]}
+        Bluff.foo({:value => 'override'}).should eq('override')
+      end
+    end
+    
+    it 'executes within the DSL context' do
+      Bluff.for(:foo) { self.class.should == Bluff::Builder::Definition } # matchers not defined on self ??
+      Bluff.foo
+    end
+    
+    describe 'block' do
+      # context 'when an argument is required' do
+      #   Bluff.for(:foo) {|value| value}
+      #   
+      #   describe 'calling the bluff without an argument should raise an error' do
+      #     Bluff.foo
+      #     # lambda{ Bluff.foo }.should raise_error
+      #   end
+      #   
+      #   describe 'calling the bluff with an argument should pass the argument to the block' do
+      #     Bluff.foo(99).should eq(99)
+      #   end
+      # end
+      
+      it 'has dsl methods available for use' do
+        Bluff.for(:foo) { insist }
+        Bluff.foo
+      end
+    end
   end
   
   describe '.bluff' do

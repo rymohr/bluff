@@ -3,6 +3,20 @@ require 'bluff/support/backend/active_record'
 
 module Bluff
   module Builder
+    class Definition
+      def initialize(*arguments)
+        @arguments = *arguments
+      end
+      
+      def execute(&block)
+        self.instance_exec(*@arguments, &block)
+      end
+      
+      def insist
+        puts "instance insist"
+      end
+    end
+    
     module ClassMethods
         # def insist(field)
       #   raise ArgumentError, "#{field} cannot be bluffed for #{target}"
@@ -28,13 +42,12 @@ module Bluff
       end
   
       def define_bluff(field, &block)
-        define_singleton_method(field) do |*args|
+        define_singleton_method(field) do |*arguments|
           bluffed_object = nil
       
           config.max_attempts.times do
-            bluffed_object = block.call(*args)
+            bluffed_object = Definition.new(*arguments).execute(&block) #DSL.instance_exec(*args, &block)
             break if !bluffed_object.respond_to?(:valid?) || bluffed_object.valid?
-            puts "!!!! FAILED BLUFF -- REATTEMPTING"
           end
       
           bluffed_object
@@ -42,8 +55,8 @@ module Bluff
       end
   
       def define_bluff_bang(field)
-        define_singleton_method "#{field}!" do |*args|
-          send(field, *args).tap do |record|
+        define_singleton_method "#{field}!" do |*arguments|
+          send(field, *arguments).tap do |record|
             Bluff::Support::Backend.save!(record, field)
           end
         end
@@ -65,8 +78,11 @@ module Bluff
           bluff_bang = lambda {|*args| Bluff.send("#{field}!", *args)}
           
           klass.singleton_class.instance_eval do
-            define_method(:bluff) { self.instance_exec &bluff }
-            define_method(:bluff!) { self.instance_exec &bluff_bang } if options[:bang]
+            # define_method(:bluff) {|*args| dsl.instance_exec(*args, &bluff) }
+            # define_method(:bluff!) {|*args| dsl.instance_exec(*args, &bluff_bang) } if options[:bang]
+            # 
+            define_method(:bluff) {|*args| bluff.call(*args) }
+            define_method(:bluff!) {|*args| bluff_bang.call(*args) } if options[:bang]
           end
             
           # puts "def bluff(*args); Bluff.send(:#{field}, *args); end"
