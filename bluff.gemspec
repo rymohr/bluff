@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Bluff::VERSION
   s.authors     = ['Ryan Mohr']
   s.email       = ['ryan.mohr@gmail.com']
-  s.homepage    = ''
+  s.homepage    = 'https://github.com/islandr/bluff'
   s.summary     = %q{A single source of lies for all your testing needs}
   s.description = %q{}
 
@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   
   s.add_development_dependency 'activesupport', '~> 3.0'
-  s.add_development_dependency 'rspec', '~> 2.8' # can't we just use rspec instead?
+  s.add_development_dependency 'rspec', '~> 2.8'
   s.add_development_dependency 'faker', '~> 1.0'
 end
