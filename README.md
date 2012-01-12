@@ -30,7 +30,7 @@ Bluff comes with a small set of predefined data bluffs (see `lib/bluff/bluffs/da
 but its easy to add your own.
 
 The standard practice is to define your bluffs within spec/bluffs.  If you are
-bluffing a model, name the file **\_model\_\_bluff.rb**.  If you need to bluff custom
+bluffing a model, name the file **_model_\_bluff.rb**.  If you need to bluff custom
 data, do so in **data_bluffs.rb**.
 
 A bluff is a bluff, whether it's just a piece of data or a full blown model.  All bluffs
@@ -56,7 +56,7 @@ Bluff.for(:company_name) { Faker::Company.name }
 ```
 User.bluff  # returns an unsaved instance -- could also use Bluff.user
 User.bluff! # returns a saved instance -- could also use Bluff.user!
-User.bluff({:name #> 'Ryan'}) # supply overrides in the attributes hash
+User.bluff({:name => 'Ryan'}) # supply overrides in the attributes hash
 ```
 
 ### METHOD BLUFFS (MOCKS / STUBS)
