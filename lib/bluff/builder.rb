@@ -1,3 +1,4 @@
+require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/indifferent_access'
 
 require 'bluff/support/backend'
@@ -6,18 +7,31 @@ require 'bluff/support/backend/active_record'
 module Bluff
   module Builder
     class Definition
-      def initialize(target, *arguments)
+      def initialize(target, attributes = {})
         @target = target
-        @arguments = *arguments
+        @attributes = attributes
         
-        # how can we look up the block's default arguments in execute?
-        @attributes = @arguments.first || {}
-        
-        @attributes = @attributes.with_indifferent_access if @attributes.is_a?(Hash)
+        if @attributes.is_a?(Hash)
+          @attributes = @attributes.with_indifferent_access
+        else
+          raise ArgumentError, 'Bluff argument must be a single hash'
+        end
       end
       
+      def attributes
+        @attributes
+      end
+      
+      def attributes=(hash)
+        @attributes = hash
+      end
+      
+      # can use whatever fits the situation
+      alias :params :attributes
+      alias :params= :attributes=
+      
       def execute(&block)
-        self.instance_exec(*@arguments, &block)
+        self.instance_exec(@attributes, &block)
       end
       
       def insist(attribute)
@@ -25,13 +39,13 @@ module Bluff
       end
       
       def default(attribute, value)
-        @attributes[attribute] = value
+        @attributes[attribute] = value if @attributes[attribute].blank?
       end
       
       private
       # returns true if attributes contains attribute or attribute_id
       def provided?(attribute)
-        @attributes.is_a?(Hash) && (@attributes.has_key?(attribute) || @attributes.has_key?("#{attribute}_id"))
+        @attributes.is_a?(Hash) && !(@attributes[attribute].blank? && @attributes["#{attribute}_id"].blank?)
       end
     end
     

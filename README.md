@@ -14,7 +14,7 @@ A single source of lies for all your testing needs.
 
 Pull requests are welcome!  See the DEVELOPERS section at the bottom of this page for more information.
 
-## SYNOPSIS:
+## OVERVIEW:
 
 My original intentions for bluff are focused on rails/activerecord but I'm open
 to other libraries if it doesn't pollute the API.
@@ -52,7 +52,34 @@ Bluff.for(:name) { Faker::Name.name } # Call via Bluff.name
 Bluff.for(:company_name) { Faker::Company.name }
 ```
 
+#### HELPERS
+
+There is a very tiny DSL built into Bluff to help you out.  Two methods are available:
+`insist()` and `default()`.
+
+**insist([:attribute, :attribute, ...])** takes a list of required attributes. If any of those attributes were not
+provided an ArgumentError will be thrown.
+
+**default(:attribute, :value)** takes an attribute and a default value. If the attribute was not previously defined
+it will be assigned the given value.
+
+Here's an example of how you might put these two little guys to work:
+
+```
+Bluff.for(:workspace) do |attributes|
+  insist(:account)
+  
+  default(:name, Bluff.name)
+
+  User.new(attributes).tap do |user|
+    # sometimes it's easier to define the values here instead
+    user.email = Bluff.email({:name => user.name})
+  end
+end
+```
+
 #### CALLING YOUR BLUFFS
+
 ```
 User.bluff  # returns an unsaved instance -- could also use Bluff.user
 User.bluff! # returns a saved instance -- could also use Bluff.user!

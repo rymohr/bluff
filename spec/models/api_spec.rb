@@ -55,26 +55,19 @@ describe Bluff do
         end
 
         # attributes.requires(:).defaults(:)
-        
-        # default is not ready yet
-        # describe '.default' do
-        #   it 'assigns the given value to the attributes hash if blank' do
-        #     Bluff.for(:foo) {|attributes={}|
-        #       attributes.must_provide(:bar)
-        #       
-        #       attributes.with_defaults({
-        #         :bar => :red
-        #       })
-        #       
-        #       attributes.default(:bar, :red)
-        #       attributes[:bar]
-        #     }
-        #     
-        #     Bluff.foo.should eq(:red)
-        #     Bluff.foo({:bar => ''}).should eq(:red)
-        #     Bluff.foo({:bar => :blue}).should eq(:blue)
-        #   end
-        # end
+
+        describe '.default' do
+          it 'assigns the given value to the attributes hash if blank' do
+            Bluff.for(:foo) {|attributes|
+              default(:bar, :red)
+              attributes[:bar]
+            }
+            
+            Bluff.foo.should eq(:red)
+            Bluff.foo({:bar => ''}).should eq(:red)
+            Bluff.foo({:bar => :blue}).should eq(:blue)
+          end
+        end
       end
     end
   end
