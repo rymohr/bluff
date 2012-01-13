@@ -92,6 +92,8 @@ User.bluff({:name => 'Ryan'}) # supply overrides/defaults in the attributes hash
 
 ### METHOD BLUFFS (MOCKS / STUBS)
 
+** NOT IMPLEMENTED YET **
+
 All objects and classes are given a `bluff()` method, which is
 used for bluffing both models and methods.  If given a symbol, the 
 `bluff()` method can be used to define method stubs as follows:
