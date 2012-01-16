@@ -86,7 +86,7 @@ Feel free to use them or huck em to the curb and just work directly with the att
 
 ```
 User.bluff  # returns an unsaved instance -- could also use Bluff.user
-User.bluff! # returns a saved instance -- could also use Bluff.user!
+User.bluff! # the "bang bluff" -- returns a persisted/saved instance, could also use Bluff.user!
 User.bluff({:name => 'Ryan'}) # supply overrides/defaults in the attributes hash
 ```
 

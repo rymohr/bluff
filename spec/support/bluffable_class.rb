@@ -12,18 +12,18 @@ class BluffableClass
   end
 end
 
-module Bluff::Support::BluffableClass
-  class Backend
+module Bluff::Support::Persistence
+  class BluffableClassAdapter
     class << self
-      def accepts?(record)
+      def persists?(record)
         record.is_a?(BluffableClass)
       end
 
-      def save!(record)
+      def persist(record)
         record.save
       end
     end
-
-    Bluff::Support::Backend.register(self)
+  
+    Bluff::Support::Persistence::Base.register(self)
   end
 end

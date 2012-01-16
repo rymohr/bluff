@@ -86,7 +86,7 @@ describe Bluff do
         end
         
         Bluff.for(:transient_class) { TransientClass.new }
-        lambda{ Bluff.transient_class! }.should raise_error(RuntimeError, /cannot be bang bluffed/)
+        lambda{ Bluff.transient_class! }.should raise_error(RuntimeError, /transient_class is not persistable/)
       end
     end
     

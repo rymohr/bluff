@@ -3,8 +3,8 @@ require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/array/conversions'
 require 'active_support/core_ext/hash/indifferent_access'
 
-require 'bluff/support/backend'
-require 'bluff/support/backend/active_record'
+require 'bluff/support/persistence/base'
+require 'bluff/support/persistence/active_record'
 
 module Bluff
   module Builder
@@ -97,7 +97,7 @@ module Bluff
       def define_bluff_bang(field)
         define_singleton_method "#{field}!" do |*arguments|
           send(field, *arguments).tap do |record|
-            Bluff::Support::Backend.save!(record, field)
+            Bluff::Support.persist(record, {:as => field})
           end
         end
       end

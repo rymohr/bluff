@@ -11,6 +11,6 @@
 
 module Bluff
   module Support
-    # autoload
+    # autoload bluffs for rspec
   end
 end
